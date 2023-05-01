@@ -1,3 +1,4 @@
+
 import { type ChangeEvent, useRef, useState, useEffect, useMemo } from "react";
 import { PDFDocument, PDFPageDrawImageOptions } from "pdf-lib";
 import { pdfjs, Document, Page } from "react-pdf/dist/esm/entry.vite";
@@ -8,6 +9,7 @@ import interact from "interactjs";
 import { useOnClickOutside } from "./useOnClickOutside";
 import { dragMoveListener, resizeListener } from "./listeners";
 import { dataURItoBlob } from "./utils";
+import * as pdfjsLib from "pdfjs-dist";
 
 type Size = {
     width: number;
@@ -114,8 +116,9 @@ export function App() {
 
         const file = e.currentTarget.files[0];
         const fileBuffer = await file.arrayBuffer();
+
         const pdfDoc = await PDFDocument.load(fileBuffer);
-        setPdfDocument(pdfDoc);
+        setPdfDocument(pdfDoc);//pdfDoc
 
         const pdfBytes = await pdfDoc.save();
         const docUrl = URL.createObjectURL(
@@ -159,6 +162,9 @@ export function App() {
         };
         page.drawImage(image, args);
 
+
+         // Save form field values to the PDFDocument
+
         const pdfBytes = await pdfDocument.save();
         const docUrl = URL.createObjectURL(
             new Blob([pdfBytes], { type: "application/pdf" })
@@ -174,7 +180,7 @@ export function App() {
             <div className="p-8 w-full h-full bg-sky-50">
                 <div className="mx-auto max-w-screen-lg bg-white shadow-md rounded-md p-8">
                     <h1 className="text-center font-bold text-4xl text-slate-700">
-                        Digital Signing Proof of Concept
+      
                     </h1>
                     <input
                         className="invisible w-0 h-0"
@@ -244,7 +250,7 @@ export function App() {
                                 canvasRef={documentRef}
                                 renderTextLayer={false}
                                 renderAnnotationLayer={false}
-                            />
+                                />
                         </Document>
                     </div>
                     {pdfInfo !== "" && (
